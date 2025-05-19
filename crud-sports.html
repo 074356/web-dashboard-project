@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>🛠️ Sports CRUD</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>🏀 Manage Favorite Sports Teams</h1>
+
+  <input type="text" id="teamInput" placeholder="Enter team/player name">
+  <button onclick="addTeam()">➕ Add</button>
+
+  <ul id="teamList"></ul>
+
+  <button onclick="location.href='index.html'">🏠 Back Home</button>
+
+  <script>
+    let teams = JSON.parse(localStorage.getItem('sportsTeams')) || [];
+
+    function renderTeams() {
+      const list = document.getElementById("teamList");
+      list.innerHTML = "";
+      teams.forEach((team, index) => {
+        list.innerHTML += `
+          <li>
+            ${team}
+            <button onclick="editTeam(${index})">✏️ Edit</button>
+            <button onclick="deleteTeam(${index})">❌ Delete</button>
+          </li>
+        `;
+      });
+    }
+
+    function addTeam() {
+      const input = document.getElementById("teamInput");
+      if (input.value.trim() === "") return;
+      teams.push(input.value.trim());
+      localStorage.setItem('sportsTeams', JSON.stringify(teams));
+      input.value = "";
+      renderTeams();
+    }
+
+    function editTeam(index) {
+      const newTeam = prompt("Edit team/player:", teams[index]);
+      if (newTeam) {
+        teams[index] = newTeam;
+        localStorage.setItem('sportsTeams', JSON.stringify(teams));
+        renderTeams();
+      }
+    }
+
+    function deleteTeam(index) {
+      if (confirm("Delete this item?")) {
+        teams.splice(index, 1);
+        localStorage.setItem('sportsTeams', JSON.stringify(teams));
+        renderTeams();
+      }
+    }
+
+    renderTeams();
+  </script>
+</body>
+</html>

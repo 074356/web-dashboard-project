@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>🛠️ Weather CRUD</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>🛠️ Manage Your Favorite Weather Cities</h1>
+
+  <input type="text" id="cityInput" placeholder="Enter city name">
+  <button onclick="addCity()">➕ Add</button>
+
+  <ul id="cityList"></ul>
+
+  <button onclick="location.href='index.html'">🏠 Back Home</button>
+
+  <script>
+    let cities = JSON.parse(localStorage.getItem('weatherCities')) || [];
+
+    function renderCities() {
+      const list = document.getElementById("cityList");
+      list.innerHTML = "";
+      cities.forEach((city, index) => {
+        list.innerHTML += `
+          <li>
+            ${city}
+            <button onclick="editCity(${index})">✏️ Edit</button>
+            <button onclick="deleteCity(${index})">❌ Delete</button>
+          </li>
+        `;
+      });
+    }
+
+    function addCity() {
+      const input = document.getElementById("cityInput");
+      if (input.value.trim() === "") return;
+      cities.push(input.value.trim());
+      localStorage.setItem('weatherCities', JSON.stringify(cities));
+      input.value = "";
+      renderCities();
+    }
+
+    function editCity(index) {
+      const newCity = prompt("Edit city:", cities[index]);
+      if (newCity) {
+        cities[index] = newCity;
+        localStorage.setItem('weatherCities', JSON.stringify(cities));
+        renderCities();
+      }
+    }
+
+    function deleteCity(index) {
+      if (confirm("Delete this city?")) {
+        cities.splice(index, 1);
+        localStorage.setItem('weatherCities', JSON.stringify(cities));
+        renderCities();
+      }
+    }
+
+    renderCities();
+  </script>
+</body>
+</html>

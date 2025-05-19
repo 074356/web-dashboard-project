@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>⚽ Sports Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <h1>⚽ Football League Stats</h1>
+  <p>Sample Data: Team Points Comparison</p>
+
+  <canvas id="sportsChart" width="400" height="200"></canvas>
+
+  <button onclick="location.href='index.html'">🏠 Back Home</button>
+
+  <script>
+    const sampleTeams = ["Manchester City", "Liverpool", "Chelsea", "Arsenal", "Manchester United"];
+    const samplePoints = [88, 85, 78, 75, 72];
+
+    const ctx = document.getElementById('sportsChart').getContext('2d');
+    const chart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: sampleTeams,
+        datasets: [{
+          label: 'Team Points',
+          data: samplePoints,
+          backgroundColor: [
+            '#1abc9c', '#3498db', '#9b59b6', '#f39c12', '#e74c3c'
+          ],
+          borderColor: '#333',
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    });
+  </script>
+</body>
+</html>

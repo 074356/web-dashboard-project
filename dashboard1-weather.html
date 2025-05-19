@@ -1,0 +1,18 @@
+<!-- dashboard1-weather.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Weather Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+  <script defer src="script.js"></script>
+</head>
+<body>
+  <h1>🌤️ Weather Dashboard</h1>
+  <input type="text" id="city" placeholder="Enter city name">
+  <button onclick="loadWeather(document.getElementById('city').value)">Get Weather</button>
+  <div id="weather-result"></div>
+
+  <button onclick="location.href='index.html'">🏠 Back Home</button>
+</body>
+</html>
