@@ -2,63 +2,112 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>🛠️ Sports CRUD</title>
-  <link rel="stylesheet" href="style.css">
+  <title>Sports CRUD Dashboard</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #ff9966, #ff5e62);
+      color: #fff;
+      text-align: center;
+      padding: 30px;
+    }
+    table {
+      width: 80%;
+      margin: auto;
+      background: #ffffff10;
+      border-collapse: collapse;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    th, td {
+      padding: 15px;
+      border: 1px solid #ffffff30;
+    }
+    input, button {
+      padding: 10px;
+      margin: 10px;
+      border-radius: 10px;
+      border: none;
+    }
+    button {
+      background-color: #27ae60;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    button.delete-btn {
+      background-color: #c0392b;
+    }
+    .nav {
+      margin-top: 20px;
+    }
+    .nav a {
+      color: #fff;
+      background-color: #2c3e50;
+      padding: 10px 15px;
+      border-radius: 8px;
+      text-decoration: none;
+      margin: 5px;
+    }
+  </style>
 </head>
 <body>
-  <h1>🏀 Manage Favorite Sports Teams</h1>
 
-  <input type="text" id="teamInput" placeholder="Enter team/player name">
-  <button onclick="addTeam()">➕ Add</button>
+  <h1>⚽ Sports Match Tracker</h1>
 
-  <ul id="teamList"></ul>
+  <input type="text" id="team" placeholder="Enter Team Name">
+  <input type="text" id="score" placeholder="Score">
+  <button onclick="addMatch()">Add Match</button>
 
-  <button onclick="location.href='index.html'">🏠 Back Home</button>
+  <table>
+    <thead>
+      <tr>
+        <th>Team</th>
+        <th>Score</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody id="matchTable"></tbody>
+  </table>
+
+  <div class="nav">
+    <a href="index.html">🏠 Home</a>
+    <a href="dashboard2.html">📊 Sports Dashboard</a>
+  </div>
 
   <script>
-    let teams = JSON.parse(localStorage.getItem('sportsTeams')) || [];
+    const matchData = [];
 
-    function renderTeams() {
-      const list = document.getElementById("teamList");
-      list.innerHTML = "";
-      teams.forEach((team, index) => {
-        list.innerHTML += `
-          <li>
-            ${team}
-            <button onclick="editTeam(${index})">✏️ Edit</button>
-            <button onclick="deleteTeam(${index})">❌ Delete</button>
-          </li>
+    function addMatch() {
+      const team = document.getElementById("team").value.trim();
+      const score = document.getElementById("score").value.trim();
+
+      if (team && score) {
+        matchData.push({ team, score });
+        displayMatches();
+        document.getElementById("team").value = "";
+        document.getElementById("score").value = "";
+      }
+    }
+
+    function deleteMatch(index) {
+      matchData.splice(index, 1);
+      displayMatches();
+    }
+
+    function displayMatches() {
+      const table = document.getElementById("matchTable");
+      table.innerHTML = "";
+      matchData.forEach((item, index) => {
+        table.innerHTML += `
+          <tr>
+            <td>${item.team}</td>
+            <td>${item.score}</td>
+            <td><button class="delete-btn" onclick="deleteMatch(${index})">Delete</button></td>
+          </tr>
         `;
       });
     }
-
-    function addTeam() {
-      const input = document.getElementById("teamInput");
-      if (input.value.trim() === "") return;
-      teams.push(input.value.trim());
-      localStorage.setItem('sportsTeams', JSON.stringify(teams));
-      input.value = "";
-      renderTeams();
-    }
-
-    function editTeam(index) {
-      const newTeam = prompt("Edit team/player:", teams[index]);
-      if (newTeam) {
-        teams[index] = newTeam;
-        localStorage.setItem('sportsTeams', JSON.stringify(teams));
-        renderTeams();
-      }
-    }
-
-    function deleteTeam(index) {
-      if (confirm("Delete this item?")) {
-        teams.splice(index, 1);
-        localStorage.setItem('sportsTeams', JSON.stringify(teams));
-        renderTeams();
-      }
-    }
-
-    renderTeams();
   </script>
 </body>
 </html>
