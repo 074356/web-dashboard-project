@@ -2,63 +2,112 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>🛠️ Weather CRUD</title>
-  <link rel="stylesheet" href="style.css">
+  <title>Weather CRUD Dashboard</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #6dd5fa, #2980b9);
+      color: #fff;
+      text-align: center;
+      padding: 30px;
+    }
+    table {
+      width: 80%;
+      margin: auto;
+      background: #ffffff10;
+      border-collapse: collapse;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    th, td {
+      padding: 15px;
+      border: 1px solid #ffffff30;
+    }
+    input, button {
+      padding: 10px;
+      margin: 10px;
+      border-radius: 10px;
+      border: none;
+    }
+    button {
+      background-color: #2ecc71;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    button.delete-btn {
+      background-color: #e74c3c;
+    }
+    .nav {
+      margin-top: 20px;
+    }
+    .nav a {
+      color: #fff;
+      background-color: #34495e;
+      padding: 10px 15px;
+      border-radius: 8px;
+      text-decoration: none;
+      margin: 5px;
+    }
+  </style>
 </head>
 <body>
-  <h1>🛠️ Manage Your Favorite Weather Cities</h1>
 
-  <input type="text" id="cityInput" placeholder="Enter city name">
-  <button onclick="addCity()">➕ Add</button>
+  <h1>🌦️ Weather Conditions Manager</h1>
 
-  <ul id="cityList"></ul>
+  <input type="text" id="city" placeholder="Enter City">
+  <input type="text" id="temperature" placeholder="Temperature (°C)">
+  <button onclick="addWeather()">Add Weather</button>
 
-  <button onclick="location.href='index.html'">🏠 Back Home</button>
+  <table>
+    <thead>
+      <tr>
+        <th>City</th>
+        <th>Temperature (°C)</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody id="weatherTable"></tbody>
+  </table>
+
+  <div class="nav">
+    <a href="index.html">🏠 Home</a>
+    <a href="dashboard1.html">📊 Weather Dashboard</a>
+  </div>
 
   <script>
-    let cities = JSON.parse(localStorage.getItem('weatherCities')) || [];
+    const weatherData = [];
 
-    function renderCities() {
-      const list = document.getElementById("cityList");
-      list.innerHTML = "";
-      cities.forEach((city, index) => {
-        list.innerHTML += `
-          <li>
-            ${city}
-            <button onclick="editCity(${index})">✏️ Edit</button>
-            <button onclick="deleteCity(${index})">❌ Delete</button>
-          </li>
+    function addWeather() {
+      const city = document.getElementById("city").value.trim();
+      const temp = document.getElementById("temperature").value.trim();
+
+      if (city && temp) {
+        weatherData.push({ city, temp });
+        displayWeather();
+        document.getElementById("city").value = "";
+        document.getElementById("temperature").value = "";
+      }
+    }
+
+    function deleteWeather(index) {
+      weatherData.splice(index, 1);
+      displayWeather();
+    }
+
+    function displayWeather() {
+      const table = document.getElementById("weatherTable");
+      table.innerHTML = "";
+      weatherData.forEach((item, index) => {
+        table.innerHTML += `
+          <tr>
+            <td>${item.city}</td>
+            <td>${item.temp}</td>
+            <td><button class="delete-btn" onclick="deleteWeather(${index})">Delete</button></td>
+          </tr>
         `;
       });
     }
-
-    function addCity() {
-      const input = document.getElementById("cityInput");
-      if (input.value.trim() === "") return;
-      cities.push(input.value.trim());
-      localStorage.setItem('weatherCities', JSON.stringify(cities));
-      input.value = "";
-      renderCities();
-    }
-
-    function editCity(index) {
-      const newCity = prompt("Edit city:", cities[index]);
-      if (newCity) {
-        cities[index] = newCity;
-        localStorage.setItem('weatherCities', JSON.stringify(cities));
-        renderCities();
-      }
-    }
-
-    function deleteCity(index) {
-      if (confirm("Delete this city?")) {
-        cities.splice(index, 1);
-        localStorage.setItem('weatherCities', JSON.stringify(cities));
-        renderCities();
-      }
-    }
-
-    renderCities();
   </script>
 </body>
 </html>
