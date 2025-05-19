@@ -1,47 +1,88 @@
+<!-- dashboard2-sports.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>⚽ Sports Dashboard</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <title>Football League Dashboard</title>
+  <link rel="stylesheet" href="style.css" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
   <h1>⚽ Football League Stats</h1>
-  <p>Sample Data: Team Points Comparison</p>
+
+  <label for="sortSelect">Sort by:</label>
+  <select id="sortSelect" onchange="updateChart()">
+    <option value="pointsDesc">Points (High to Low)</option>
+    <option value="pointsAsc">Points (Low to High)</option>
+    <option value="nameAsc">Team Name (A-Z)</option>
+    <option value="nameDesc">Team Name (Z-A)</option>
+  </select>
 
   <canvas id="sportsChart" width="400" height="200"></canvas>
 
   <button onclick="location.href='index.html'">🏠 Back Home</button>
 
   <script>
-    const sampleTeams = ["Manchester City", "Liverpool", "Chelsea", "Arsenal", "Manchester United"];
-    const samplePoints = [88, 85, 78, 75, 72];
+    const teamsData = [
+      { name: "Manchester City", points: 88 },
+      { name: "Liverpool", points: 85 },
+      { name: "Chelsea", points: 78 },
+      { name: "Arsenal", points: 75 },
+      { name: "Manchester United", points: 72 }
+    ];
 
     const ctx = document.getElementById('sportsChart').getContext('2d');
-    const chart = new Chart(ctx, {
-      type: 'bar',
-      data: {
-        labels: sampleTeams,
-        datasets: [{
-          label: 'Team Points',
-          data: samplePoints,
-          backgroundColor: [
-            '#1abc9c', '#3498db', '#9b59b6', '#f39c12', '#e74c3c'
-          ],
-          borderColor: '#333',
-          borderWidth: 1
-        }]
-      },
-      options: {
-        responsive: true,
-        scales: {
-          y: {
-            beginAtZero: true
+    let sportsChartInstance;
+
+    function updateChart() {
+      const sortBy = document.getElementById('sortSelect').value;
+      let sortedData = [...teamsData];
+
+      switch (sortBy) {
+        case 'pointsDesc':
+          sortedData.sort((a,b) => b.points - a.points);
+          break;
+        case 'pointsAsc':
+          sortedData.sort((a,b) => a.points - b.points);
+          break;
+        case 'nameAsc':
+          sortedData.sort((a,b) => a.name.localeCompare(b.name));
+          break;
+        case 'nameDesc':
+          sortedData.sort((a,b) => b.name.localeCompare(a.name));
+          break;
+      }
+
+      const labels = sortedData.map(t => t.name);
+      const points = sortedData.map(t => t.points);
+
+      if (sportsChartInstance) sportsChartInstance.destroy();
+
+      sportsChartInstance = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels,
+          datasets: [{
+            label: 'Team Points',
+            data: points,
+            backgroundColor: [
+              '#1abc9c', '#3498db', '#9b59b6', '#f39c12', '#e74c3c'
+            ],
+            borderColor: '#333',
+            borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: true,
+          scales: {
+            y: { beginAtZero: true }
           }
         }
-      }
-    });
+      });
+    }
+
+    // Initialize chart
+    updateChart();
   </script>
 </body>
 </html>
